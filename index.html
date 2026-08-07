@@ -3,22 +3,572 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cargando Entorno Virtual de Aprendizaje...</title>
-  <!-- Redirección directa por Meta Refresh -->
-  <meta http-equiv="refresh" content="0; url=https://script.google.com/macros/s/AKfycbzyle20ei_HF8hqp9p7vxc4D-dr72J56RbQwtcbR413fPMDrdWxDuPdNezgGUxxr32I2A/exec">
-  <script>
-    // Redirección inmediata por JavaScript con aislamiento de origen
-    window.onload = function() {
-      const link = document.createElement('a');
-      link.href = "https://script.google.com/macros/s/AKfycbzyle20ei_HF8hqp9p7vxc4D-dr72J56RbQwtcbR413fPMDrdWxDuPdNezgGUxxr32I2A/exec";
-      link.rel = "noreferrer noopener";
-      link.click();
-    };
-  </script>
+  <title>Mapa Conceptual Interactivo EVA EMPA</title>
+  <style>
+    :root {
+      --bg-color: #e8ebff;
+      --header-bg: #bcc2eb;
+      --header-text: #20264e;
+      --header-sub: #3d4677;
+      
+      --panel-bg: #ffffff;
+      --primary: #525c99;
+      --primary-light: #f0f2ff;
+      --accent: #6b77c4;
+      --accent-hover: #485296;
+      
+      --migration-bg: #fffbeb;
+      --migration-border: #d97706;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --line-color: #94a3b8;
+      --card-shadow: 0 4px 12px rgba(30, 41, 59, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 18px 24px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header .logo-container {
+      margin-bottom: 8px;
+    }
+
+    header .logo-container img {
+      max-height: 55px;
+      width: auto;
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      margin-bottom: 4px;
+    }
+
+    header p {
+      font-size: 0.95rem;
+      color: var(--header-sub);
+      font-weight: 500;
+    }
+
+    main {
+      flex: 1;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .map-controls-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 1400px;
+      margin-bottom: 12px;
+      padding: 8px 14px;
+      background: rgba(255, 255, 255, 0.75);
+      border: 1px solid #dcdfe8;
+      border-radius: 8px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .instruction-hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .toolbar-compact {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .btn-sm {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      color: var(--text-main);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-sm:hover {
+      background: var(--primary-light);
+      border-color: var(--accent);
+      color: var(--accent-hover);
+    }
+
+    .viewport {
+      width: 100%;
+      max-width: 1400px;
+      background: var(--panel-bg);
+      border-radius: 14px;
+      box-shadow: var(--card-shadow);
+      padding: 30px 20px 25px 20px;
+      overflow-x: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Estructura Árbol de Jerarquía */
+    .tree, .tree ul, .tree li {
+      position: relative;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .tree {
+      display: flex;
+      justify-content: center;
+      transition: transform 0.2s ease;
+      transform-origin: top center;
+    }
+
+    .tree ul {
+      display: flex;
+      justify-content: center;
+      padding-top: 26px;
+    }
+
+    .tree ul::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      border-left: 2px solid var(--line-color);
+      width: 0;
+      height: 26px;
+    }
+
+    .tree li {
+      text-align: center;
+      position: relative;
+      padding: 26px 10px 0 10px;
+      transition: all 0.3s ease;
+    }
+
+    .tree li::before, .tree li::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 50%;
+      border-top: 2px solid var(--line-color);
+      width: 50%;
+      height: 26px;
+    }
+
+    .tree li::after {
+      right: auto;
+      left: 50%;
+      border-left: 2px solid var(--line-color);
+    }
+
+    .tree li:only-child::after, .tree li:only-child::before {
+      display: none;
+    }
+
+    .tree li:only-child {
+      padding-top: 0;
+    }
+
+    .tree li:first-child::before, .tree li:last-child::after {
+      border: 0 none;
+    }
+
+    .tree li:last-child::before {
+      border-right: 2px solid var(--line-color);
+      border-radius: 0 6px 0 0;
+    }
+
+    .tree li:first-child::after {
+      border-radius: 6px 0 0 0;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: inline-block;
+      min-width: 170px;
+      max-width: 250px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+      transition: all 0.2s ease;
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.06);
+      border-color: var(--accent);
+    }
+
+    .card.root {
+      background: var(--header-bg);
+      color: var(--header-text);
+      border: 1.5px solid #a3acd8;
+      min-width: 250px;
+      max-width: 310px;
+      padding: 16px 20px;
+    }
+
+    .card.root .title {
+      color: var(--header-text);
+      font-size: 1.2rem;
+      margin-bottom: 6px;
+    }
+
+    .card.root .desc {
+      color: var(--header-sub);
+      font-size: 0.82rem;
+      line-height: 1.35;
+    }
+
+    .card.category {
+      border-top: 4px solid var(--accent);
+      background: #f8fafc;
+      cursor: pointer;
+      user-select: none;
+      min-width: 200px;
+      max-width: 250px;
+      padding: 12px 16px;
+    }
+
+    .card.category .title {
+      color: var(--primary);
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .card.category .desc {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      margin-top: 4px;
+      line-height: 1.3;
+    }
+
+    .toggle-icon {
+      font-size: 0.75rem;
+      background: #e2e8f0;
+      color: var(--primary);
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 4px;
+      font-weight: bold;
+      transition: transform 0.2s ease;
+    }
+
+    .collapsed + .branch-sub {
+      display: none !important;
+    }
+
+    .card .title {
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .card .provider {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 10px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin-top: 5px;
+      text-transform: uppercase;
+    }
+
+    .badge-active {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge-inactive {
+      background: #f1f5f9;
+      color: #64748b;
+    }
+
+    .card.migration {
+      background: var(--migration-bg);
+      border: 1.5px dashed var(--migration-border);
+    }
+
+    .card.migration .title {
+      color: var(--migration-border);
+      font-size: 0.85rem;
+    }
+
+    .card.migration .provider {
+      color: #78350f;
+      font-size: 0.8rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 14px;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      background: #ffffff;
+      border-top: 1px solid #e2e8f0;
+    }
+  </style>
 </head>
 <body>
-  <p style="font-family: sans-serif; text-align: center; margin-top: 20%;">
-    Redirigiendo al mapa conceptual del EVA EMPA...
-  </p>
+
+  <header>
+    <div class="logo-container">
+      <img src="Logo_EVA_EMPA.png" alt="Logo EVA EMPA" onerror="this.style.display='none'">
+    </div>
+    <h1>Entorno Virtual de Aprendizaje (EVA)</h1>
+    <p>Escuela de Música Popular de Avellaneda (EMPA)</p>
+  </header>
+
+  <main>
+    <div class="map-controls-top">
+      <div class="instruction-hint">
+        💡 Clic en los módulos superiores para desplegar u ocultar subcategorías.
+      </div>
+      <div class="toolbar-compact">
+        <button class="btn-sm" onclick="zoomIn()" title="Aumentar zoom">🔍 +</button>
+        <button class="btn-sm" onclick="zoomOut()" title="Reducir zoom">🔍 -</button>
+        <button class="btn-sm" onclick="resetZoom()" title="Restablecer vista">🔄 Restablecer</button>
+        <button class="btn-sm" onclick="expandAll()">📂 Expandir</button>
+        <button class="btn-sm" onclick="collapseAll()">📁 Colapsar</button>
+        <button class="btn-sm" onclick="window.print()">🖨️ Imprimir</button>
+      </div>
+    </div>
+
+    <div class="viewport">
+      <div class="tree" id="treeMap">
+        <ul>
+          <li>
+            <!-- NODO RAÍZ -->
+            <div class="card root">
+              <div class="title">EVA EMPA</div>
+              <div class="desc">
+                <strong>Entorno Virtual de Aprendizaje</strong> de la <strong>Escuela de Música Popular de Avellaneda</strong>.<br>
+                Ecosistema digital integrado para la gestión académica, pedagógica e institucional.
+              </div>
+            </div>
+
+            <!-- NIVEL 1: CATEGORÍAS PRINCIPALES -->
+            <ul>
+              
+              <!-- RAMA 1: WEB -->
+              <li>
+                <div class="card category collapsed" onclick="toggleBranch(this)">
+                  <div class="title">
+                    WEB
+                    <span class="toggle-icon">▼</span>
+                  </div>
+                  <div class="desc">Plataformas y portales institucionales de acceso público e información general.</div>
+                </div>
+                <ul class="branch-sub">
+                  <li>
+                    <div class="card">
+                      <div class="title">Web Activa</div>
+                      <div class="provider">Proveedor actual:<br><strong>Gurú</strong></div>
+                      <span class="badge badge-active">En uso</span>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="card">
+                      <div class="title">Web Inactiva</div>
+                      <div class="provider">Proveedor:<br><strong>WordPress - Educativa INfoD</strong></div>
+                      <span class="badge badge-inactive">Inactiva</span>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+
+              <!-- RAMA 2: SISTEMAS DE GESTIÓN -->
+              <li>
+                <div class="card category collapsed" onclick="toggleBranch(this)">
+                  <div class="title">
+                    Sistemas de Gestión
+                    <span class="toggle-icon">▼</span>
+                  </div>
+                  <div class="desc">Plataformas para el control administrativo, académico y las aulas virtuales de aprendizaje.</div>
+                </div>
+                <ul class="branch-sub">
+                  <li>
+                    <div class="card">
+                      <div class="title">Gestión Administrativa</div>
+                      <div class="provider">Proveedor actual:<br><strong>Prox Bemol</strong></div>
+                    </div>
+                    <ul>
+                      <li>
+                        <div class="card migration">
+                          <div class="title">Opción / Oferta:</div>
+                          <div class="provider"><strong>SIU Guaraní</strong><br>(DGCyE / Univ. Nacionales)</div>
+                        </div>
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    <div class="card">
+                      <div class="title">Gestión de Aprendizaje (LMS)</div>
+                      <div class="provider">Proveedor actual:<br><strong>Educativa INfoD</strong></div>
+                    </div>
+                    <ul>
+                      <li>
+                        <div class="card migration">
+                          <div class="title">Posibilidad de Migración:</div>
+                          <div class="provider"><strong>Moodle</strong></div>
+                        </div>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+
+              <!-- RAMA 3: REDES -->
+              <li>
+                <div class="card category collapsed" onclick="toggleBranch(this)">
+                  <div class="title">
+                    Redes
+                    <span class="toggle-icon">▼</span>
+                  </div>
+                  <div class="desc">Canales oficiales de comunicación exterior, difusión comunitaria e interacción social.</div>
+                </div>
+                <ul class="branch-sub">
+                  <li>
+                    <div class="card">
+                      <div class="title">Facebook</div>
+                      <div class="provider">Canal oficial</div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="card">
+                      <div class="title">Instagram</div>
+                      <div class="provider">Canal oficial</div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="card">
+                      <div class="title">X</div>
+                      <div class="provider">Canal oficial</div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="card">
+                      <div class="title">YouTube</div>
+                      <div class="provider">Canal audiovisual oficial</div>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    Mapa Conceptual Interactivo — EMPA
+  </footer>
+
+  <script>
+    let currentScale = 1;
+    const treeMap = document.getElementById('treeMap');
+
+    function toggleBranch(element) {
+      element.classList.toggle('collapsed');
+      
+      const icon = element.querySelector('.toggle-icon');
+      if (element.classList.contains('collapsed')) {
+        icon.textContent = '▼';
+      } else {
+        icon.textContent = '▲';
+      }
+    }
+
+    function expandAll() {
+      document.querySelectorAll('.card.category').forEach(card => {
+        card.classList.remove('collapsed');
+        const icon = card.querySelector('.toggle-icon');
+        if (icon) icon.textContent = '▲';
+      });
+    }
+
+    function collapseAll() {
+      document.querySelectorAll('.card.category').forEach(card => {
+        card.classList.add('collapsed');
+        const icon = card.querySelector('.toggle-icon');
+        if (icon) icon.textContent = '▼';
+      });
+    }
+
+    function zoomIn() {
+      if (currentScale < 1.4) {
+        currentScale += 0.1;
+        applyZoom();
+      }
+    }
+
+    function zoomOut() {
+      if (currentScale > 0.6) {
+        currentScale -= 0.1;
+        applyZoom();
+      }
+    }
+
+    function resetZoom() {
+      currentScale = 1;
+      applyZoom();
+    }
+
+    function applyZoom() {
+      treeMap.style.transform = `scale(${currentScale})`;
+    }
+  </script>
 </body>
 </html>
