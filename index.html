@@ -3,10 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EVA EMPA - Mapa Conceptual</title>
-    <meta http-equiv="refresh" content="0; url=https://script.google.com/macros/s/AKfycbzyle20ei_HF8hqp9p7vxc4D-dr72J56RbQwtcbR413fPMDrdWxDuPdNezgGUxxr32I2A/exec">
+    <title>EVA EMPA - Entorno Virtual de Aprendizaje</title>
+    <style>
+        /* Recolorización sobre la base #e8ebff */
+        :root {
+            --bg-color: #f5f6ff;            /* Fondo general claro en gama */
+            --card-bg: #ffffff;             /* Fondo de la tarjeta central */
+            --card-border: #e8ebff;         /* Tono base e8ebff para bordes */
+            --primary-purple: #4f46e5;      /* Color de acento institucional para el botón */
+            --hover-purple: #3730a3;        /* Estado hover para interacción */
+            --text-dark: #1e1b4b;           /* Texto índigo profundo para contraste */
+            --text-muted: #475569;          /* Texto descriptivo neutro */
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Contenedor con borde y sombra suave basados en #e8ebff */
+        .container {
+            background-color: var(--card-bg);
+            padding: 35px 30px;
+            border-radius: 16px;
+            border: 2px solid var(--card-border);
+            box-shadow: 0 10px 30px rgba(232, 235, 255, 0.8);
+            max-width: 420px;
+            width: 100%;
+        }
+
+        /* Estilo para el logo en tamaño discreto */
+        .logo-empa {
+            width: 120px;
+            height: auto;
+            margin-bottom: 15px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Título Principal */
+        h1 {
+            margin: 0 0 6px 0;
+            font-size: 20px;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: var(--primary-purple);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 20px;
+        }
+
+        /* Texto descriptivo */
+        p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 25px;
+        }
+
+        /* Botón con el contraste óptimo */
+        .secure-btn {
+            display: inline-block;
+            background-color: var(--primary-purple);
+            color: #ffffff;
+            padding: 15px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+            cursor: pointer;
+            width: 85%;
+            box-sizing: border-box;
+        }
+
+        .secure-btn:hover {
+            background-color: var(--hover-purple);
+            box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .secure-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* Pie institucional con división en #e8ebff */
+        .footer-note {
+            margin-top: 25px;
+            font-size: 12px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--card-border);
+            padding-top: 15px;
+        }
+    </style>
 </head>
 <body>
-    <p>Redirigiendo a EVA EMPA... Si no carga automáticamente, <a href="https://script.google.com/macros/s/AKfycbzyle20ei_HF8hqp9p7vxc4D-dr72J56RbQwtcbR413fPMDrdWxDuPdNezgGUxxr32I2A/exec">haz clic aquí</a>.</p>
+
+    <div class="container">
+        <!-- Logo en tamaño discreto -->
+        <img src="Logo_EVA_EMPA.png" alt="Logo EVA EMPA" class="logo-empa">
+
+        <h1>Entorno Virtual de Aprendizaje</h1>
+        <div class="subtitle">Escuela de Música Popular de Avellaneda</div>
+        
+        <p>Para abrir el mapa conceptual interactivo en tu dispositivo, haz clic en el siguiente botón:</p>
+        
+        <!-- Enlace funcional de Google Apps Script -->
+        <a href="https://script.google.com/macros/s/AKfycbzyle20ei_HF8hqp9p7vxc4D-dr72J56RbQwtcbR413fPMDrdWxDuPdNezgGUxxr32I2A/exec" 
+           class="secure-btn" 
+           target="_blank">
+           Abrir Mapa Conceptual
+        </a>
+        
+        <div class="footer-note">
+            Plataforma Oficial EMPA
+        </div>
+    </div>
+
 </body>
 </html>
